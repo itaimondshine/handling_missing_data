@@ -69,7 +69,7 @@ def try_mnar():
 
 def detect_type_of_missingness(df, column_name):
     no_correlation = False
-    corr_matrix = coorelation_matrix(dtf)
+    corr_matrix = coorelation_matrix(df)
     negative = (corr_matrix[column_name] < -0.3) & (corr_matrix[column_name] > -1)
     positive = (corr_matrix[column_name] > 0.3) & (corr_matrix[column_name] < 1)
     if not any(positive | negative):
@@ -167,7 +167,7 @@ def dealing_with_mcar(df, feature):
     return opt_fetures[new_f_ind], options[new_f_ind]
 
 
-def plot_handling(dtf):
+def plot_handling(dtf, column_feature):
     plt.figure(figsize=(12, 8))
     dtf[column_feature].plot(kind='kde', color='b')
     dtf[column_feature + '_median'].plot(kind='kde', color='y')
@@ -178,23 +178,3 @@ def plot_handling(dtf):
     plt.legend()
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    dataset_path = "datasets/MelbourneHousing/train.csv"
-    column_feature = 'YearBuilt'
-    dtf = pd.read_csv(dataset_path)
-    dtf_copy = dtf.copy()
-    _type = detect_type_of_missingness(dtf, column_feature)
-    print(_type)
-    # Handling the missing values
-    skew, option_method = dealing_with_mcar(dtf, column_feature)
-    print(option_method)
-    # visualize the different solutions
-    plt.figure(figsize=(12, 8))
-    dtf[column_feature].plot(kind='kde', color='b')
-    dtf[column_feature + '_median'].plot(kind='kde', color='y')
-    dtf[column_feature + '_random'].plot(kind='kde', color='r')
-    dtf[column_feature + '_mean'].plot(kind='kde', color='r')
-    dtf[column_feature + '_mode'].plot(kind='kde', color='r')
-    plt.plot()
-    plt.legend()
